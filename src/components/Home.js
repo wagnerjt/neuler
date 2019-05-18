@@ -1,4 +1,7 @@
-import React, { Component } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+
 import {
   Button,
   Card,
@@ -8,8 +11,8 @@ import {
   Icon,
 } from 'semantic-ui-react';
 
+// NEuler imports
 import { selectGroup } from '../ducks/algorithms';
-import { connect } from 'react-redux';
 
 /**
  * @author wagnerjt
@@ -50,51 +53,55 @@ const AlgorithmCategories = [
   },
 ];
 
-class Home extends Component {
-  render() {
-    const containerStyle = {
-      padding: '1em',
-    };
+const Home = ({ selectGroup }) => {
+  const containerStyle = {
+    padding: '1em',
+  };
 
-    const { selectGroup } = this.props;
+  return (
+    <div style={containerStyle}>
+      <Container fluid>
+        <Header as="h3">Algorithm Categories</Header>
+        <p>
+          The Neo4j Graph Algorithms Library supports the following categories
+          of algorithms.
+        </p>
 
-    return (
-      <div style={containerStyle}>
-        <Container fluid>
-          <Header as={'h3'}>Algorithm Categories</Header>
-          <p>
-            The Neo4j Graph Algorithms Library supports the following categories
-            of algorithms.
-          </p>
+        {/* Render all known algorithm categories in their respective cards */}
+        <CardGroup>
+          {AlgorithmCategories.map(category => (
+            <Card key={category.key}>
+              <Card.Content>
+                <Icon name={category.icon} />
+                <Card.Header>{category.header}</Card.Header>
+                <Card.Meta>{category.description}</Card.Meta>
+              </Card.Content>
+              <Card.Content extra>
+                <div className="ui two buttons">
+                  <Button
+                    basic
+                    color="green"
+                    onClick={() => selectGroup(category.group)}
+                  >
+                    Select
+                  </Button>
+                </div>
+              </Card.Content>
+            </Card>
+          ))}
+        </CardGroup>
+      </Container>
+    </div>
+  );
+};
 
-          {/* Render all known algorithm categories in their respective cards */}
-          <CardGroup>
-            {AlgorithmCategories.map(category => (
-              <Card key={category.key}>
-                <Card.Content>
-                  <Icon name={category.icon} />
-                  <Card.Header>{category.header}</Card.Header>
-                  <Card.Meta>{category.description}</Card.Meta>
-                </Card.Content>
-                <Card.Content extra>
-                  <div className="ui two buttons">
-                    <Button
-                      basic
-                      color="green"
-                      onClick={() => selectGroup(category.group)}
-                    >
-                      Select
-                    </Button>
-                  </div>
-                </Card.Content>
-              </Card>
-            ))}
-          </CardGroup>
-        </Container>
-      </div>
-    );
-  }
-}
+Home.propTypes = {
+  // state
+  activeGroup: PropTypes.string.isRequired,
+
+  // dispatch
+  selectGroup: PropTypes.func.isRequired,
+};
 
 const mapStateToProps = state => ({
   activeGroup: state.algorithms.group,
