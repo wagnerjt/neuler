@@ -1,24 +1,33 @@
-import React, { Component } from 'react'
-import { Render } from 'graph-app-kit/components/Render'
-import { Button, Form, Modal, Message } from 'semantic-ui-react'
+import React, { Component } from 'react';
+import { Render } from 'graph-app-kit/components/Render';
+import { Button, Form, Modal, Message } from 'semantic-ui-react';
 
 class ConnectForm extends Component {
   state = {
     username: '',
-    password: ''
+    password: '',
   };
+
   inputUpdated = (_, { name, value }) => {
-    this.setState({ [name]: value })
+    this.setState({ [name]: value });
   };
+
   onSubmit = () => {
-    const { username, password } = this.state
-    this.props.onSubmit(username, password)
+    const { username, password } = this.state;
+    this.props.onSubmit(username, password);
   };
-  render () {
-    const { open, errorMsg, onClose } = this.props
-    const { username, password } = this.state
+
+  render() {
+    const { open, errorMsg, onClose } = this.props;
+    const { username, password } = this.state;
     return (
-      <Modal size='tiny' open={open} onClose={onClose} closeOnDimmerClick={false}>
+      <Modal
+        size="tiny"
+        open={open}
+        onClose={onClose}
+        closeOnDimmerClick={false}
+        closeOnEscape={false}
+      >
         <Modal.Header>Connect to the active graph</Modal.Header>
         <Modal.Content>
           <Form error={!!errorMsg}>
@@ -26,23 +35,23 @@ class ConnectForm extends Component {
               <label>Username</label>
               <Form.Input
                 value={username}
-                name='username'
+                name="username"
                 onChange={this.inputUpdated}
-                placeholder='Username'
+                placeholder="Username"
               />
             </Form.Field>
             <Form.Field>
               <label>Password</label>
               <Form.Input
                 value={password}
-                name='password'
+                name="password"
                 onChange={this.inputUpdated}
-                type='password'
-                placeholder='Password'
+                type="password"
+                placeholder="Password"
               />
             </Form.Field>
             <Render if={errorMsg}>
-              <Message error header='An error occurred' content={errorMsg} />
+              <Message error header="An error occurred" content={errorMsg} />
             </Render>
           </Form>
         </Modal.Content>
@@ -50,31 +59,34 @@ class ConnectForm extends Component {
           <Button
             onClick={this.onSubmit}
             positive
-            icon='right arrow'
-            labelPosition='right'
-            content='Connect'
+            icon="right arrow"
+            labelPosition="right"
+            content="Connect"
           />
         </Modal.Actions>
       </Modal>
-    )
+    );
   }
 }
 
 export class ConnectModal extends Component {
   state = {
     showModal: true,
-    initial: true
+    initial: true,
   };
+
   closeModal = () => {
-    this.setState({ showModal: false })
+    this.setState({ showModal: false });
   };
+
   onSubmit = (username, password) => {
     this.setState({ initial: false }, () => {
-      this.props.onSubmit(username, password)
-    })
+      this.props.onSubmit(username, password);
+    });
   };
-  render () {
-    const errorMsg = this.state.initial ? false : this.props.errorMsg
+
+  render() {
+    const errorMsg = this.state.initial ? false : this.props.errorMsg;
     return (
       <ConnectForm
         onClose={this.closeModal}
@@ -82,6 +94,6 @@ export class ConnectModal extends Component {
         errorMsg={errorMsg}
         open={this.props.show && this.state.showModal}
       />
-    )
+    );
   }
 }
